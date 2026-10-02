@@ -1,4 +1,7 @@
+'use client';
+
 import Script from 'next/script';
+import { useEffect, useRef } from 'react';
 
 const BRANDS = [
   'Samsung', 'Xiaomi', 'Redmi', 'POCO', 'vivo', 'iQOO', 'OPPO', 'OnePlus',
@@ -6,7 +9,103 @@ const BRANDS = [
   'HMD', 'TECNO', 'Infinix', 'itel',
 ];
 
+const FEATURES: [string, string][] = [
+  ['Missed payment', 'The phone locks to a payment screen the day an instalment is overdue.'],
+  ['SIM removed', 'Pull the SIM to dodge the system and the phone locks within 30 seconds.'],
+  ['Restart or airplane mode', 'The lock survives reboots and offline tricks. Restarting never clears it.'],
+  ['Offline SMS control', 'Lock and unlock commands reach the phone by SMS when there is no internet.'],
+  ['Voice reminders', 'The phone speaks the payment reminder to the customer before and after the due date.'],
+  ['Unlock on payment', 'The moment the EMI is recorded as paid, the phone unlocks on its own.'],
+];
+
+const STEPS: [string, string, string][] = [
+  ['1', 'Install on the new phone', 'Scan a QR on a fresh phone. The app installs itself and becomes the device manager.'],
+  ['2', 'Link the sale', 'Add the customer, IMEI, EMI months, amount, and due day in the retailer app.'],
+  ['3', 'Hand over the phone', 'The app hides itself. The customer sees a normal phone.'],
+  ['4', 'Manage from your app', 'Lock, unlock, record payments, and watch every device from one list.'],
+];
+
+const FAQS: [string, string][] = [
+  ['Can the customer bypass the lock with a factory reset?', 'No. Device Owner mode blocks a factory reset from settings, and the lock returns after any reboot. We are honest about the one limit: a recovery-mode wipe with a computer can reset the phone, and factory reset protection then requires the account. No phone system can block that, and we do not claim otherwise.'],
+  ['Does it work without internet?', 'Yes. Lock and unlock commands also arrive by SMS, and the lock itself runs entirely on the phone.'],
+  ['What happens the moment they pay?', 'You record the payment in your app. The phone unlocks on its own within seconds.'],
+  ['Which brands are supported?', 'Every major brand sold in India, listed above. Each brand is tested on a real device before we ship it.'],
+  ['What does the customer see?', 'A normal phone while payments are on time. If an instalment is late, a clear screen with the amount due, your shop number, and an emergency 112 button.'],
+  ['How do I get set up?', 'Message us on WhatsApp. We create your account, hand you the retailer app, and walk your first enrolment together.'],
+];
+
 export default function Page() {
+  const heroRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reveals = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+
+    // Reduced motion (or no IntersectionObserver): show everything, no animation.
+    if (prefersReduced || typeof IntersectionObserver === 'undefined') {
+      reveals.forEach((el) => el.classList.add('visible'));
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          const delay = Number(el.dataset.delay ?? '0');
+          window.setTimeout(() => el.classList.add('visible'), delay);
+          io.unobserve(el);
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+    );
+    reveals.forEach((el) => io.observe(el));
+
+    // Mouse parallax: translate hero blobs/chips a few pixels. Transform-category
+    // properties only, batched into a single rAF so there is no layout thrash.
+    const hero = heroRef.current;
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    let raf = 0;
+    let nx = 0;
+    let ny = 0;
+
+    const apply = () => {
+      raf = 0;
+      if (!hero) return;
+      hero.style.setProperty('--mx', `${(nx * 14).toFixed(2)}px`);
+      hero.style.setProperty('--my', `${(ny * 14).toFixed(2)}px`);
+    };
+    const schedule = () => {
+      if (!raf) raf = window.requestAnimationFrame(apply);
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!hero) return;
+      const r = hero.getBoundingClientRect();
+      nx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+      ny = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+      schedule();
+    };
+    const onLeave = () => {
+      nx = 0;
+      ny = 0;
+      schedule();
+    };
+
+    if (hero && finePointer) {
+      hero.addEventListener('pointermove', onMove);
+      hero.addEventListener('pointerleave', onLeave);
+    }
+
+    return () => {
+      io.disconnect();
+      if (hero) {
+        hero.removeEventListener('pointermove', onMove);
+        hero.removeEventListener('pointerleave', onLeave);
+      }
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -22,8 +121,8 @@ export default function Page() {
     <>
       <Script id="app-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <main>
-        <header className="hero">
-          <div className="blobs">
+        <header className="hero" ref={heroRef}>
+          <div className="blobs" aria-hidden="true">
             <span className="blob a" />
             <span className="blob b" />
             <span className="blob c" />
@@ -46,10 +145,30 @@ export default function Page() {
             <div className="phonewrap">
               <div className="phone">
                 <div className="screen locked">
-                  <span className="lockicon">LOCK</span>
+                  <div className="lock-stage">
+                    <span className="ring-burst" aria-hidden="true" />
+                    <span className="lockicon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="26" height="26" fill="none">
+                        <path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                        <rect x="4.5" y="10" width="15" height="10.5" rx="2.5" fill="currentColor" />
+                      </svg>
+                    </span>
+                  </div>
                   <span className="l1">Phone locked</span>
+                  <div className="emi-ring" data-reveal aria-hidden="true">
+                    <span className="emi-ring-label"><strong>67%</strong><small>paid</small></span>
+                  </div>
                   <span className="l2">Rs 2,400 due on 15 June</span>
                   <span className="l3">Pay to unlock</span>
+                </div>
+                <div className="screen paid" aria-hidden="true">
+                  <span className="lockicon open">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none">
+                      <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  <span className="l1">Payment received</span>
+                  <span className="l2">Phone unlocked</span>
                 </div>
                 <span className="chip-float one">SIM removed → locked</span>
                 <span className="chip-float two">Paid → unlocked</span>
@@ -60,8 +179,8 @@ export default function Page() {
 
         <section id="problem">
           <div className="container">
-            <h2>Chasing EMI payments is costing you</h2>
-            <p className="sub">
+            <h2 data-reveal>Chasing EMI payments is costing you</h2>
+            <p className="sub" data-reveal data-delay="80">
               Customers stop paying after they take the phone. You have no leverage, and home visits waste days.
               emidost puts the leverage back on the phone itself.
             </p>
@@ -70,15 +189,15 @@ export default function Page() {
 
         <section id="roles" style={{ background: '#fff' }}>
           <div className="container">
-            <h2>Who it is for</h2>
-            <p className="sub">Two apps. One backend. Nothing for the customer to learn.</p>
+            <h2 data-reveal>Who it is for</h2>
+            <p className="sub" data-reveal data-delay="80">Two apps. One backend. Nothing for the customer to learn.</p>
             <div className="cards">
-              <div className="card">
+              <div className="card" data-reveal>
                 <span className="icon" style={{ background: 'linear-gradient(135deg,#2dd4bf,#0d9488)' }}>R</span>
                 <h3>Retailers</h3>
                 <p>Register the customer, record the EMI plan, enrol the phone at the counter, and lock or unlock it in one tap.</p>
               </div>
-              <div className="card">
+              <div className="card" data-reveal data-delay="120">
                 <span className="icon" style={{ background: 'linear-gradient(135deg,#fbbf24,#d97706)' }}>C</span>
                 <h3>Customers</h3>
                 <p>The phone works normally while payments are on time. Dues and reminders are always visible on screen.</p>
@@ -89,18 +208,11 @@ export default function Page() {
 
         <section id="features">
           <div className="container">
-            <h2>What the lock actually does</h2>
-            <p className="sub">Every feature below runs on the phone itself, with or without internet.</p>
+            <h2 data-reveal>What the lock actually does</h2>
+            <p className="sub" data-reveal data-delay="80">Every feature below runs on the phone itself, with or without internet.</p>
             <div className="steps">
-              {[
-                ['Missed payment', 'The phone locks to a payment screen the day an instalment is overdue.'],
-                ['SIM removed', 'Pull the SIM to dodge the system and the phone locks within 30 seconds.'],
-                ['Restart or airplane mode', 'The lock survives reboots and offline tricks. Restarting never clears it.'],
-                ['Offline SMS control', 'Lock and unlock commands reach the phone by SMS when there is no internet.'],
-                ['Voice reminders', 'The phone speaks the payment reminder to the customer before and after the due date.'],
-                ['Unlock on payment', 'The moment the EMI is recorded as paid, the phone unlocks on its own.'],
-              ].map(([t, d]) => (
-                <div className="step" key={t}>
+              {FEATURES.map(([t, d], i) => (
+                <div className="step" key={t} data-reveal data-delay={String(i * 80)}>
                   <span className="badge">✓</span>
                   <div>
                     <h3>{t}</h3>
@@ -114,29 +226,26 @@ export default function Page() {
 
         <section id="brands" style={{ background: '#fff' }}>
           <div className="container">
-            <h2>Works on the phones you sell</h2>
-            <p className="sub">
+            <h2 data-reveal>Works on the phones you sell</h2>
+            <p className="sub" data-reveal data-delay="80">
               The enrolment wizard knows each brand's settings, so your counter staff never guess.
             </p>
             <div className="brands">
-              {BRANDS.map((b) => <span className="brand" key={b}>{b}</span>)}
+              {BRANDS.map((b, i) => (
+                <span className="brand reveal-pop" key={b} data-reveal data-delay={String(i * 35)}>{b}</span>
+              ))}
             </div>
-            <p className="muted-line">Android 11 and above. Every brand is certified on a real device before we say it works.</p>
+            <p className="muted-line" data-reveal>Android 11 and above. Every brand is certified on a real device before we say it works.</p>
           </div>
         </section>
 
         <section id="how">
           <div className="container">
-            <h2>Set up in minutes at the counter</h2>
-            <p className="sub">One enrolment per phone. After that, the phone protects the agreement on its own.</p>
+            <h2 data-reveal>Set up in minutes at the counter</h2>
+            <p className="sub" data-reveal data-delay="80">One enrolment per phone. After that, the phone protects the agreement on its own.</p>
             <div className="steps">
-              {[
-                ['1', 'Install on the new phone', 'Scan a QR on a fresh phone. The app installs itself and becomes the device manager.'],
-                ['2', 'Link the sale', 'Add the customer, IMEI, EMI months, amount, and due day in the retailer app.'],
-                ['3', 'Hand over the phone', 'The app hides itself. The customer sees a normal phone.'],
-                ['4', 'Manage from your app', 'Lock, unlock, record payments, and watch every device from one list.'],
-              ].map(([n, t, d]) => (
-                <div className="step" key={n}>
+              {STEPS.map(([n, t, d], i) => (
+                <div className="step" key={n} data-reveal data-delay={String(i * 80)}>
                   <span className="badge">{n}</span>
                   <div>
                     <h3>{t}</h3>
@@ -150,12 +259,12 @@ export default function Page() {
 
         <section id="pricing" style={{ background: '#fff' }}>
           <div className="container">
-            <h2>Simple pricing per device</h2>
-            <p className="sub">
+            <h2 data-reveal>Simple pricing per device</h2>
+            <p className="sub" data-reveal data-delay="80">
               You pay per financed phone, with bulk credits for shops that sell more. Tell us your monthly volume
               on WhatsApp and we will send a quote the same day.
             </p>
-            <div className="cta-row">
+            <div className="cta-row" data-reveal data-delay="160">
               <a className="btn whatsapp" href="https://wa.me/917003617074">Get a quote on WhatsApp</a>
             </div>
           </div>
@@ -163,8 +272,8 @@ export default function Page() {
 
         <section id="trust">
           <div className="container">
-            <h2>Fair to your customer, safe for your loan</h2>
-            <p className="sub">
+            <h2 data-reveal>Fair to your customer, safe for your loan</h2>
+            <p className="sub" data-reveal data-delay="80">
               The phone stays fully usable while payments are on time. The lock only appears when an instalment is
               overdue. We do not sell customer data. Built with phone retailers who were tired of chasing payments.
             </p>
@@ -173,48 +282,30 @@ export default function Page() {
 
         <section id="faq" style={{ background: '#fff' }}>
           <div className="container">
-            <h2>Questions retailers ask</h2>
+            <h2 data-reveal>Questions retailers ask</h2>
             <div className="faq">
-              <details>
-                <summary>Can the customer bypass the lock with a factory reset?</summary>
-                <p>No. Device Owner mode blocks a factory reset from settings, and the lock returns after any reboot. We are honest about the one limit: a recovery-mode wipe with a computer can reset the phone, and factory reset protection then requires the account. No phone system can block that, and we do not claim otherwise.</p>
-              </details>
-              <details>
-                <summary>Does it work without internet?</summary>
-                <p>Yes. Lock and unlock commands also arrive by SMS, and the lock itself runs entirely on the phone.</p>
-              </details>
-              <details>
-                <summary>What happens the moment they pay?</summary>
-                <p>You record the payment in your app. The phone unlocks on its own within seconds.</p>
-              </details>
-              <details>
-                <summary>Which brands are supported?</summary>
-                <p>Every major brand sold in India, listed above. Each brand is tested on a real device before we ship it.</p>
-              </details>
-              <details>
-                <summary>What does the customer see?</summary>
-                <p>A normal phone while payments are on time. If an instalment is late, a clear screen with the amount due, your shop number, and an emergency 112 button.</p>
-              </details>
-              <details>
-                <summary>How do I get set up?</summary>
-                <p>Message us on WhatsApp. We create your account, hand you the retailer app, and walk your first enrolment together.</p>
-              </details>
+              {FAQS.map(([q, a], i) => (
+                <details key={q} data-reveal data-delay={String(i * 60)}>
+                  <summary>{q}</summary>
+                  <div className="faq-answer"><p>{a}</p></div>
+                </details>
+              ))}
             </div>
           </div>
         </section>
 
         <section id="download">
           <div className="container">
-            <h2>Download</h2>
-            <p className="sub">Two apps. The retailer app is yours. The customer app goes on financed phones.</p>
+            <h2 data-reveal>Download</h2>
+            <p className="sub" data-reveal data-delay="80">Two apps. The retailer app is yours. The customer app goes on financed phones.</p>
             <div className="download-grid">
-              <div className="dl retailer">
+              <div className="dl retailer" data-reveal>
                 <span className="tag">For your shop</span>
                 <h3>Retailer app</h3>
                 <p>Customer registration, payments, step by step enrolment, lock and unlock.</p>
                 <a className="btn" href="https://github.com/emidost/emidost/releases/latest/download/emidost-retailer.apk">Download APK</a>
               </div>
-              <div className="dl customer">
+              <div className="dl customer" data-reveal data-delay="120">
                 <span className="tag">For financed phones</span>
                 <h3>Customer app</h3>
                 <p>Installed during enrolment. Named wifi and hidden after setup.</p>
@@ -226,14 +317,14 @@ export default function Page() {
 
         <section id="contact" className="contact">
           <div className="container">
-            <h2>Start selling phones you can trust</h2>
-            <p className="sub">
+            <h2 data-reveal>Start selling phones you can trust</h2>
+            <p className="sub" data-reveal data-delay="80">
               Message us on WhatsApp. We set up your account, your retailer logins, and your first enrolment the same day.
             </p>
             <div className="links">
-              <a className="btn whatsapp" href="https://wa.me/917003617074">WhatsApp +91 70036 17074</a>
-              <a className="btn ghost" href="mailto:financebuddy144@gmail.com">financebuddy144@gmail.com</a>
-              <a className="btn ghost" href="tel:+917003617074">Call +91 70036 17074</a>
+              <a className="btn whatsapp" href="https://wa.me/917003617074" data-reveal>WhatsApp +91 70036 17074</a>
+              <a className="btn ghost" href="mailto:financebuddy144@gmail.com" data-reveal data-delay="80">financebuddy144@gmail.com</a>
+              <a className="btn ghost" href="tel:+917003617074" data-reveal data-delay="160">Call +91 70036 17074</a>
             </div>
           </div>
         </section>
