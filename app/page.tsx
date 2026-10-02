@@ -81,7 +81,7 @@ export default function Page() {
         <nav className="nav" aria-label="Main">
           <div className="container nav-inner">
             <a className="wordmark" href="#">
-              <span className="mark" aria-hidden="true"><Lock size={17} strokeWidth={2.4} /></span>
+              <img className="mark" src="/mark.svg" alt="" width={34} height={34} style={{ borderRadius: 10 }} />
               emidost
             </a>
             <div className="nav-links">
