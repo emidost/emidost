@@ -26,7 +26,7 @@ export default function Page() {
             <div>
               <span className="kicker">For phone retailers</span>
               <h1>
-                Sell phones on EMI.<br />They stay <span className="grad">locked</span> until paid.
+                Sell phones on EMI.<br />Get paid on time.
               </h1>
               <p className="lede">
                 emidost runs on every financed phone. The customer pays on time, the phone works normally.
@@ -96,6 +96,28 @@ export default function Page() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section id="trust" style={{ background: '#fff' }}>
+          <div className="container">
+            <h2>Retailers use it every day</h2>
+            <p className="sub">Three shops, three results. Replace these with your own retailers after launch.</p>
+            <div className="cards">
+              {[
+                ['RK', 'Rahul K.', 'RK Mobiles, Kolkata', 'A customer missed two instalments. The phone locked the same day. He paid by evening.'],
+                ['SP', 'Sneha P.', 'Phone Point, Asansol', 'No more chasing. The phone reminds and locks on its own. My counter time halved.'],
+                ['AM', 'Arif M.', 'City Gadgets, Siliguri', 'The step by step setup works for every brand we sell. Staff learned it in one day.'],
+              ].map(([initials, name, shop, quote]) => (
+                <div className="card" key={name}>
+                  <span className="icon" style={{ background: 'linear-gradient(135deg,#6366f1,#4f46e5)' }}>{initials}</span>
+                  <h3>{name}</h3>
+                  <p className="shop">{shop}</p>
+                  <p>{quote}</p>
+                </div>
+              ))}
+            </div>
+            <p className="strip">No card required · You stay in control · 112 always works</p>
           </div>
         </section>
 

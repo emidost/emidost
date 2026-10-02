@@ -110,6 +110,29 @@ section .sub { color: var(--muted); font-size: 17px; max-width: 640px; margin: 0
 
 .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 @media (max-width: 900px) { .cards { grid-template-columns: 1fr; } }
+.card .shop { color: var(--muted); font-size: 12.5px; margin: 0 0 8px; }
+.strip {
+  margin: 28px 0 0;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f7f8fb;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Hero phone cycle: locked to paid every 6s, reduced-motion safe. */
+.screen { animation: screencycle 6s ease-in-out infinite; }
+@keyframes screencycle {
+  0%, 70% { background: linear-gradient(170deg, #1e2433, #10131c); }
+  78%, 100% { background: linear-gradient(170deg, #0d9488, #0b5f56); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .screen { animation: none; }
+  .blob, .lockicon, .chip-float { animation: none; }
+}
 .card {
   background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
   padding: 26px; box-shadow: 0 10px 30px -22px rgba(15,17,23,0.35);
