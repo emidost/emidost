@@ -1,8 +1,11 @@
 import { MetadataRoute } from 'next';
 
+const siteUrl = 'https://emidost-landing.pages.dev';
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [{ userAgent: '*', allow: '/' }],
-    sitemap: 'https://emidost-download.vercel.app/sitemap.xml',
+    sitemap: `${siteUrl}/sitemap.xml`,
+    host: siteUrl,
   };
 }

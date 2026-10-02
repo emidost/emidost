@@ -129,13 +129,14 @@ export default function Page() {
           </div>
           <div className="container hero-inner">
             <div>
-              <span className="kicker">For phone retailers</span>
+              <span className="kicker">Phone financing for retailers in India</span>
               <h1>
-                Sell phones on EMI.<br />Get paid on time.
+                Sell phones on EMI.<br />Lock them until the loan is paid.
               </h1>
               <p className="lede">
-                Lock the phone when a payment is missed, unlock it the moment it clears.
-                You keep selling. The phone protects the loan.
+                emidost is financed phone security for your shop. Sell on EMI, and let the EMI lock
+                hold every device until the last instalment clears. Miss a payment, the phone locks.
+                Pay it, the phone unlocks on its own.
               </p>
               <div className="cta-row">
                 <a className="btn primary" href="#download">Download the apps</a>
@@ -208,7 +209,7 @@ export default function Page() {
 
         <section id="features">
           <div className="container">
-            <h2 data-reveal>What the lock actually does</h2>
+            <h2 data-reveal>What the EMI lock actually does</h2>
             <p className="sub" data-reveal data-delay="80">Every feature below runs on the phone itself, with or without internet.</p>
             <div className="steps">
               {FEATURES.map(([t, d], i) => (
@@ -272,10 +273,13 @@ export default function Page() {
 
         <section id="trust">
           <div className="container">
-            <h2 data-reveal>Fair to your customer, safe for your loan</h2>
+            <h2 data-reveal>Financed phone security that stays fair to your customer</h2>
             <p className="sub" data-reveal data-delay="80">
-              The phone stays fully usable while payments are on time. The lock only appears when an instalment is
+              The phone stays fully usable while payments are on time. The EMI lock only appears when an instalment is
               overdue. We do not sell customer data. Built with phone retailers who were tired of chasing payments.
+            </p>
+            <p className="strip" data-reveal data-delay="160">
+              “A customer missed two instalments. The phone locked the same day. He paid by evening.” · Rahul K., RK Mobiles, Kolkata
             </p>
           </div>
         </section>
@@ -317,12 +321,19 @@ export default function Page() {
 
         <section id="contact" className="contact">
           <div className="container">
-            <h2 data-reveal>Start selling phones you can trust</h2>
+            <h2 data-reveal>Start phone financing with EMI lock today</h2>
             <p className="sub" data-reveal data-delay="80">
-              Message us on WhatsApp. We set up your account, your retailer logins, and your first enrolment the same day.
+              Message us on WhatsApp and we set up your account, your retailer logins, and your first enrolment the same day.
+              Keep selling on EMI, let the lock protect every loan.
             </p>
             <div className="links">
-              <a className="btn whatsapp" href="https://wa.me/917003617074" data-reveal>WhatsApp +91 70036 17074</a>
+              <a
+                className="btn whatsapp"
+                href="https://wa.me/917003617074?text=Hi%20emidost%2C%20I%20run%20a%20phone%20shop%20and%20want%20to%20start%20phone%20financing%20with%20an%20EMI%20lock.%20Please%20set%20up%20my%20account."
+                data-reveal
+              >
+                WhatsApp +91 70036 17074
+              </a>
               <a className="btn ghost" href="mailto:financebuddy144@gmail.com" data-reveal data-delay="80">financebuddy144@gmail.com</a>
               <a className="btn ghost" href="tel:+917003617074" data-reveal data-delay="160">Call +91 70036 17074</a>
             </div>
