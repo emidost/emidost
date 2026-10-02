@@ -123,6 +123,39 @@ section .sub { color: var(--muted); font-size: 17px; max-width: 640px; margin: 0
   text-align: center;
 }
 
+/* Brand grid + FAQ */
+.brands { display: flex; flex-wrap: wrap; gap: 10px; }
+.brand {
+  padding: 9px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f7f8fb;
+  font-size: 14px;
+  font-weight: 600;
+}
+.muted-line { color: var(--muted); font-size: 13.5px; margin: 18px 0 0; }
+
+.faq details {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  margin-bottom: 10px;
+  padding: 4px 18px;
+}
+.faq summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 12px 0;
+  list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq details p { color: var(--muted); margin: 0 0 14px; font-size: 14.5px; }
+
+/* Two-card download layout */
+.download-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; max-width: 760px; }
+@media (max-width: 860px) { .download-grid { grid-template-columns: 1fr; } }
+
 /* Hero phone cycle: locked to paid every 6s, reduced-motion safe. */
 .screen { animation: screencycle 6s ease-in-out infinite; }
 @keyframes screencycle {

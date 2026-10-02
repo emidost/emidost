@@ -1,5 +1,11 @@
 import Script from 'next/script';
 
+const BRANDS = [
+  'Samsung', 'Xiaomi', 'Redmi', 'POCO', 'vivo', 'iQOO', 'OPPO', 'OnePlus',
+  'realme', 'HONOR', 'Google Pixel', 'Motorola', 'Nothing', 'CMF', 'Lava',
+  'HMD', 'TECNO', 'Infinix', 'itel',
+];
+
 export default function Page() {
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -29,8 +35,8 @@ export default function Page() {
                 Sell phones on EMI.<br />Get paid on time.
               </h1>
               <p className="lede">
-                emidost runs on every financed phone. The customer pays on time, the phone works normally.
-                Miss a payment, remove the SIM, restart the phone: it locks itself. Payment unlocks it.
+                Lock the phone when a payment is missed, unlock it the moment it clears.
+                You keep selling. The phone protects the loan.
               </p>
               <div className="cta-row">
                 <a className="btn primary" href="#download">Download the apps</a>
@@ -52,40 +58,83 @@ export default function Page() {
           </div>
         </header>
 
-        <section id="roles">
+        <section id="problem">
           <div className="container">
-            <h2>One system, three apps</h2>
-            <p className="sub">Each role gets its own app. Everything connects through one backend.</p>
+            <h2>Chasing EMI payments is costing you</h2>
+            <p className="sub">
+              Customers stop paying after they take the phone. You have no leverage, and home visits waste days.
+              emidost puts the leverage back on the phone itself.
+            </p>
+          </div>
+        </section>
+
+        <section id="roles" style={{ background: '#fff' }}>
+          <div className="container">
+            <h2>Who it is for</h2>
+            <p className="sub">Two apps. One backend. Nothing for the customer to learn.</p>
             <div className="cards">
               <div className="card">
-                <span className="icon" style={{ background: 'linear-gradient(135deg,#6366f1,#4f46e5)' }}>01</span>
-                <h3>Owner app</h3>
-                <p>Manage every retailer. Allocate credits and lock allowances. Suspend accounts. Watch the device board and audit trail.</p>
+                <span className="icon" style={{ background: 'linear-gradient(135deg,#2dd4bf,#0d9488)' }}>R</span>
+                <h3>Retailers</h3>
+                <p>Register the customer, record the EMI plan, enrol the phone at the counter, and lock or unlock it in one tap.</p>
               </div>
               <div className="card">
-                <span className="icon" style={{ background: 'linear-gradient(135deg,#2dd4bf,#0d9488)' }}>02</span>
-                <h3>Retailer app</h3>
-                <p>Register customers, record payments, enrol any brand step by step, and lock or unlock with one tap.</p>
-              </div>
-              <div className="card">
-                <span className="icon" style={{ background: 'linear-gradient(135deg,#fbbf24,#d97706)' }}>03</span>
-                <h3>Customer app</h3>
-                <p>Installed on the financed phone. Shows dues and reminders. Locks the phone the moment an instalment is late.</p>
+                <span className="icon" style={{ background: 'linear-gradient(135deg,#fbbf24,#d97706)' }}>C</span>
+                <h3>Customers</h3>
+                <p>The phone works normally while payments are on time. Dues and reminders are always visible on screen.</p>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="how" style={{ background: '#fff' }}>
+        <section id="features">
           <div className="container">
-            <h2>How it works</h2>
-            <p className="sub">One enrolment at the counter. After that, the phone protects the agreement on its own.</p>
+            <h2>What the lock actually does</h2>
+            <p className="sub">Every feature below runs on the phone itself, with or without internet.</p>
             <div className="steps">
               {[
-                ['1', 'Register the customer', 'Name, phone, IMEI, brand and model, EMI months, amount, and due day. The retailer app records everything.'],
-                ['2', 'Enrol the phone', 'Scan the setup QR on a fresh phone, or pair it over wireless debugging. The app becomes Device Owner and hides itself.'],
-                ['3', 'The phone protects itself', 'Missed instalment, SIM removed, phone restarted, airplane mode: the phone locks. Payment unlocks it.'],
-                ['4', 'Paid in full, phone is free', 'The last payment completes the loan. The lock is removed for good and the phone is fully the customer\u2019s.'],
+                ['Missed payment', 'The phone locks to a payment screen the day an instalment is overdue.'],
+                ['SIM removed', 'Pull the SIM to dodge the system and the phone locks within 30 seconds.'],
+                ['Restart or airplane mode', 'The lock survives reboots and offline tricks. Restarting never clears it.'],
+                ['Offline SMS control', 'Lock and unlock commands reach the phone by SMS when there is no internet.'],
+                ['Voice reminders', 'The phone speaks the payment reminder to the customer before and after the due date.'],
+                ['Unlock on payment', 'The moment the EMI is recorded as paid, the phone unlocks on its own.'],
+              ].map(([t, d]) => (
+                <div className="step" key={t}>
+                  <span className="badge">✓</span>
+                  <div>
+                    <h3>{t}</h3>
+                    <p>{d}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="brands" style={{ background: '#fff' }}>
+          <div className="container">
+            <h2>Works on the phones you sell</h2>
+            <p className="sub">
+              The enrolment wizard knows each brand's settings, so your counter staff never guess.
+            </p>
+            <div className="brands">
+              {BRANDS.map((b) => <span className="brand" key={b}>{b}</span>)}
+            </div>
+            <p className="muted-line">Android 11 and above. Every brand is certified on a real device before we say it works.</p>
+          </div>
+        </section>
+
+        <section id="how">
+          <div className="container">
+            <h2>Set up in minutes at the counter</h2>
+            <p className="sub">One enrolment per phone. After that, the phone protects the agreement on its own.</p>
+            <div className="steps">
+              {[
+                ['1', 'Install on the new phone', 'Scan a QR on a fresh phone. The app installs itself and becomes the device manager.'],
+                ['2', 'Link the sale', 'Add the customer, IMEI, EMI months, amount, and due day in the retailer app.'],
+                ['3', 'Hand over the phone', 'The app hides itself. The customer sees a normal phone.'],
+                ['4', 'Manage from your app', 'Lock, unlock, record payments, and watch every device from one list.'],
               ].map(([n, t, d]) => (
                 <div className="step" key={n}>
                   <span className="badge">{n}</span>
@@ -99,49 +148,76 @@ export default function Page() {
           </div>
         </section>
 
-        <section id="trust" style={{ background: '#fff' }}>
+        <section id="pricing" style={{ background: '#fff' }}>
           <div className="container">
-            <h2>Retailers use it every day</h2>
-            <p className="sub">Three shops, three results. Replace these with your own retailers after launch.</p>
-            <div className="cards">
-              {[
-                ['RK', 'Rahul K.', 'RK Mobiles, Kolkata', 'A customer missed two instalments. The phone locked the same day. He paid by evening.'],
-                ['SP', 'Sneha P.', 'Phone Point, Asansol', 'No more chasing. The phone reminds and locks on its own. My counter time halved.'],
-                ['AM', 'Arif M.', 'City Gadgets, Siliguri', 'The step by step setup works for every brand we sell. Staff learned it in one day.'],
-              ].map(([initials, name, shop, quote]) => (
-                <div className="card" key={name}>
-                  <span className="icon" style={{ background: 'linear-gradient(135deg,#6366f1,#4f46e5)' }}>{initials}</span>
-                  <h3>{name}</h3>
-                  <p className="shop">{shop}</p>
-                  <p>{quote}</p>
-                </div>
-              ))}
+            <h2>Simple pricing per device</h2>
+            <p className="sub">
+              You pay per financed phone, with bulk credits for shops that sell more. Tell us your monthly volume
+              on WhatsApp and we will send a quote the same day.
+            </p>
+            <div className="cta-row">
+              <a className="btn whatsapp" href="https://wa.me/917003617074">Get a quote on WhatsApp</a>
             </div>
-            <p className="strip">No card required · You stay in control · 112 always works</p>
+          </div>
+        </section>
+
+        <section id="trust">
+          <div className="container">
+            <h2>Fair to your customer, safe for your loan</h2>
+            <p className="sub">
+              The phone stays fully usable while payments are on time. The lock only appears when an instalment is
+              overdue. We do not sell customer data. Built with phone retailers who were tired of chasing payments.
+            </p>
+          </div>
+        </section>
+
+        <section id="faq" style={{ background: '#fff' }}>
+          <div className="container">
+            <h2>Questions retailers ask</h2>
+            <div className="faq">
+              <details>
+                <summary>Can the customer bypass the lock with a factory reset?</summary>
+                <p>No. Device Owner mode blocks a factory reset from settings, and the lock returns after any reboot. We are honest about the one limit: a recovery-mode wipe with a computer can reset the phone, and factory reset protection then requires the account. No phone system can block that, and we do not claim otherwise.</p>
+              </details>
+              <details>
+                <summary>Does it work without internet?</summary>
+                <p>Yes. Lock and unlock commands also arrive by SMS, and the lock itself runs entirely on the phone.</p>
+              </details>
+              <details>
+                <summary>What happens the moment they pay?</summary>
+                <p>You record the payment in your app. The phone unlocks on its own within seconds.</p>
+              </details>
+              <details>
+                <summary>Which brands are supported?</summary>
+                <p>Every major brand sold in India, listed above. Each brand is tested on a real device before we ship it.</p>
+              </details>
+              <details>
+                <summary>What does the customer see?</summary>
+                <p>A normal phone while payments are on time. If an instalment is late, a clear screen with the amount due, your shop number, and an emergency 112 button.</p>
+              </details>
+              <details>
+                <summary>How do I get set up?</summary>
+                <p>Message us on WhatsApp. We create your account, hand you the retailer app, and walk your first enrolment together.</p>
+              </details>
+            </div>
           </div>
         </section>
 
         <section id="download">
           <div className="container">
             <h2>Download</h2>
-            <p className="sub">The APKs live on this project&apos;s GitHub releases. Pick the app for your role.</p>
+            <p className="sub">Two apps. The retailer app is yours. The customer app goes on financed phones.</p>
             <div className="download-grid">
-              <div className="dl owner">
-                <span className="tag">You</span>
-                <h3>Owner app</h3>
-                <p>For the business owner. Manage retailers, credits, allowances, and the device board.</p>
-                <a className="btn" href="https://github.com/emidost/emidost/releases/latest/download/emidost-owner.apk">Download APK</a>
-              </div>
               <div className="dl retailer">
-                <span className="tag">Retailers</span>
+                <span className="tag">For your shop</span>
                 <h3>Retailer app</h3>
-                <p>For shop staff. Customer registration, payments, step by step enrolment, lock and unlock.</p>
+                <p>Customer registration, payments, step by step enrolment, lock and unlock.</p>
                 <a className="btn" href="https://github.com/emidost/emidost/releases/latest/download/emidost-retailer.apk">Download APK</a>
               </div>
               <div className="dl customer">
-                <span className="tag">Financed phones</span>
+                <span className="tag">For financed phones</span>
                 <h3>Customer app</h3>
-                <p>Installed on the financed phone during enrolment. Named wifi and hidden after setup.</p>
+                <p>Installed during enrolment. Named wifi and hidden after setup.</p>
                 <a className="btn" href="https://github.com/emidost/emidost/releases/latest/download/emidost-customer.apk">Download APK</a>
               </div>
             </div>
@@ -150,10 +226,9 @@ export default function Page() {
 
         <section id="contact" className="contact">
           <div className="container">
-            <h2>Talk to us</h2>
+            <h2>Start selling phones you can trust</h2>
             <p className="sub">
-              Want emidost for your shops? Message us on WhatsApp. We set up the owner account, your retailer
-              logins, and walk your first enrolment together.
+              Message us on WhatsApp. We set up your account, your retailer logins, and your first enrolment the same day.
             </p>
             <div className="links">
               <a className="btn whatsapp" href="https://wa.me/917003617074">WhatsApp +91 70036 17074</a>
