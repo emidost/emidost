@@ -3,16 +3,8 @@ const nextConfig = {
   poweredByHeader: false,
   output: 'export',
   images: { unoptimized: true },
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-        ],
-      },
-    ];
-  },
+  // NOTE: next.config headers() do not apply to a static `output: export`.
+  // Security + cache headers are set at the edge instead — see vercel.json
+  // (Vercel) and public/_headers (Cloudflare Pages).
 };
 module.exports = nextConfig;

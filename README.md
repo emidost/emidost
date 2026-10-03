@@ -1,40 +1,67 @@
-# emidost2 — public download + landing page
+# emidost — marketing + download landing page
 
-SEO-friendly landing page for emidost. Retailers find it, learn how the system
-works, and download the APK for their role.
+Premium, animated, SEO-focused landing page for **emidost**, EMI phone lock
+software for mobile retailers in India. Retailers find it, learn how the lock
+works, and download the apps for their shop.
 
-## Hosting
+The public site is intentionally scoped to the retailer → emidost → financed
+customer device story. Internal operator tooling is **not** part of this
+website and is managed separately.
 
-Deploy from this repo on Vercel (free tier works; if it asks for a card, use
-Netlify with the same build settings):
+## Stack
 
-- Framework: Next.js
-- Build command: `npm run build`
-- Output: `.next`
+- Next.js 14 (App Router) with `output: 'export'` — static site, no server.
+- React 18 + TypeScript (strict).
+- framer-motion for the scroll + lifecycle animation (reduced-motion aware).
+- lucide-react icons, Sora + Inter via `next/font`.
 
-## Uploading the APKs
-
-The download buttons point at GitHub release assets. After each build:
-
-1. Get the three APKs from EAS (owner, retailer, customer).
-2. Upload as a release:
+## Structure
 
 ```
-gh release create v1 emidost-owner.apk emidost-retailer.apk emidost-customer.apk
+app/
+  layout.tsx        metadata, fonts, reduced-motion provider
+  page.tsx          homepage composition + JSON-LD (Org / WebSite / SoftwareApplication / FAQPage)
+  providers.tsx     <MotionConfig reducedMotion="user">
+  privacy/, terms/  legal pages
+  not-found.tsx     404
+  sitemap.ts, robots.ts, globals.css
+components/
+  motion.tsx        Reveal / Stagger / StaggerItem primitives
+  LegalShell.tsx
+  landing/          Navbar, Hero, PhoneMock, CapabilityStrip, ProblemSection,
+                    ProductDemo, OfflineSection, DeviceLockDemo, RetailerDashboard,
+                    SecuritySection, HowItWorks, UseCases, FAQ, FinalCTA, Footer
+lib/
+  content.ts        all copy + contact/download links (single source of truth)
 ```
 
-3. The buttons on the page then serve
-   `https://github.com/emidost/emidost2/releases/latest/download/<file>`.
+## Develop
 
-## Updating the contact details
+```
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # static export to ./out
+```
 
-Edit `app/page.tsx` contact section: email, WhatsApp (`wa.me/<number>`), and
-phone (`tel:+91...`). The footer has a reminder.
+## Deploying
 
-## SEO
+Static export works on Vercel (current: `emidost.vercel.app`) or Cloudflare
+Pages. Security + cache headers are set at the edge (`vercel.json` /
+`public/_headers`) because `output: export` ignores `next.config` headers.
 
-- Metadata + Open Graph in `app/layout.tsx`
-- `app/sitemap.ts` and `app/robots.ts`
-- JSON-LD SoftwareApplication schema in `app/page.tsx`
-- Update `emidost-download.vercel.app` in `layout.tsx`, `robots.ts`, and
-  `sitemap.ts` to the final domain before publishing.
+## Public downloads
+
+The download buttons point at GitHub release assets for the **retailer** and
+**customer** apps only:
+
+```
+gh release create v1 emidost-retailer.apk emidost-customer.apk
+```
+
+They then serve `https://github.com/emidost/emidost/releases/latest/download/<file>`.
+
+## Editing content
+
+Copy, contact details (WhatsApp / email / phone) and download URLs all live in
+`lib/content.ts`. The homepage metadata/SEO lives in `app/layout.tsx`; update
+the canonical domain there, in `app/sitemap.ts`, and `app/robots.ts` if it moves.

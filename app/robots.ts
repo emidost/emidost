@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const siteUrl = 'https://emidost-landing.pages.dev';
+const siteUrl = 'https://emidost.vercel.app';
 
 export default function robots(): MetadataRoute.Robots {
   return {

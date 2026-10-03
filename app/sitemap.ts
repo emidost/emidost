@@ -1,20 +1,12 @@
 import { MetadataRoute } from 'next';
 
-const siteUrl = 'https://emidost-landing.pages.dev';
+const siteUrl = 'https://emidost.vercel.app';
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const now = new Date();
   return [
-    {
-      url: siteUrl,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${siteUrl}/#download`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
+    { url: siteUrl, lastModified: now, changeFrequency: 'weekly', priority: 1 },
+    { url: `${siteUrl}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${siteUrl}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
   ];
 }
