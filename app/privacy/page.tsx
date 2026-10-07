@@ -5,7 +5,7 @@ import { CONTACT } from '@/lib/content';
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'How emidost handles information for retailers and financed devices.',
-  alternates: { canonical: 'https://emidost.vercel.app/privacy' },
+  alternates: { canonical: `${(process.env.NEXT_PUBLIC_SITE_URL || 'https://emidost.in').replace(/\/$/, '')}/privacy` },
 };
 
 export default function Privacy() {

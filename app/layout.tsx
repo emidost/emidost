@@ -6,7 +6,9 @@ import Providers from './providers';
 const sora = Sora({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
 
-const siteUrl = 'https://emidost.vercel.app';
+// Our own domain is the fallback, never the vendor's: a build without
+// NEXT_PUBLIC_SITE_URL must not tell Google the real site is emidost.vercel.app.
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://emidost.in').replace(/\/$/, '');
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

@@ -5,7 +5,7 @@ import { CONTACT } from '@/lib/content';
 export const metadata: Metadata = {
   title: 'Terms of Use',
   description: 'Terms for retailers using emidost EMI phone lock software.',
-  alternates: { canonical: 'https://emidost.vercel.app/terms' },
+  alternates: { canonical: `${(process.env.NEXT_PUBLIC_SITE_URL || 'https://emidost.in').replace(/\/$/, '')}/terms` },
 };
 
 export default function Terms() {

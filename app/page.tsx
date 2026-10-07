@@ -14,7 +14,9 @@ import FinalCTA from '@/components/landing/FinalCTA';
 import Footer from '@/components/landing/Footer';
 import { FAQS } from '@/lib/content';
 
-const SITE = 'https://emidost.vercel.app';
+// Our own domain is the fallback, never the vendor's: a build without
+// NEXT_PUBLIC_SITE_URL must not tell Google the real site is emidost.vercel.app.
+const SITE = (process.env.NEXT_PUBLIC_SITE_URL || 'https://emidost.in').replace(/\/$/, '');
 
 const jsonLd = {
   '@context': 'https://schema.org',
